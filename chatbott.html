@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DASS-42 Questionnaire</title>
+</head>
+<body>
+  <h1>DASS-42 Questionnaire</h1>
+  <p id="ratingScaleNote">Note: The rating scale is as follows:
+    <br>0 - Did not apply to me at all
+    <br>1 - Applied to me to some degree, or some of the time
+    <br>2 - Applied to me to a considerable degree, or a good part of time
+    <br>3 - Applied to me very much, or most of the time
+  </p>
+  <form id="dassForm" action="/submit" method="post">
+    <!-- Questions will be generated dynamically using JavaScript -->
+
+    <!-- Submit button -->
+    <br>
+
+  <script>
+    // Example questions and variables (you can customize this array)
+    const questions = [
+    "I found myself getting upset by quite trivial things",
+"I was aware of dryness of my mouth",
+"I couldn't seem to experience any positive feeling at all",
+"Experienced breathing difficulty (eg, excessively rapid breathing, breathlessness in the absence of physical exertion)",
+"I just couldn't seem to get going",
+"I tended to over-react to situations",
+"I had a feeling of shakiness (eg, legs going to give way)",
+"I found it difficult to relax",
+"I found myself in situations that made me so anxious I was most relieved when they ended",
+"I felt that I had nothing to look forward to",
+"I found myself getting upset rather easily",
+"I felt that I was using a lot of nervous energy",
+"I felt sad and depressed",
+"I found myself getting impatient when I was delayed in any way (eg, elevators, traffic lights, being kept waiting)",
+"I had a feeling of faintness",
+"I felt that I had lost interest in just about everything",
+"I felt I wasn't worth much as a person",
+"I felt that I was rather touchy",
+"I perspired noticeably (eg, hands sweaty) in the absence of high temperatures or physical exertion",
+"I felt scared without any good reason",
+"I felt that life wasn't worthwhile",
+"I found it hard to wind down",
+"I had difficulty in swallowing",
+"I couldn't seem to get any enjoyment out of the things I did",
+"I was aware of the action of my heart in the absence of physical exertion (eg, sense of heart rate increase, heart missing a beat)",
+"I felt down-hearted and blue",
+"I found that I was very irritable",
+"I felt I was close to panic",
+"I found it hard to calm down after something upset me",
+"I feared that I would be 'thrown' by some trivial but unfamiliar task",
+"I was unable to become enthusiastic about anything",
+"I found it difficult to tolerate interruptions to what I was doing",
+"I was in a state of nervous tension",
+"I felt I was pretty worthless",
+"I was intolerant of anything that kept me from getting on with what I was doing",
+"I felt terrified",
+"I could see nothing in the future to be hopeful about",
+"I felt that life was meaningless",
+"I found myself getting agitated",
+"I was worried about situations in which I might panic and make a fool of myself",
+"I experienced trembling (eg, in the hands)",
+"I found it difficult to work up the initiative to do things"
+      // Add more questions as needed
+    ];
+
+    // Generate form questions dynamically
+    const form = document.getElementById("dassForm");
+    for (let i = 0; i < questions.length; i++) {
+      const questionNumber = i + 1;
+      const questionVariable = `q${questionNumber}`;
+
+      const questionLabel = document.createElement("label");
+      questionLabel.textContent = `${questionNumber}. ${questions[i]}`;
+
+      form.appendChild(questionLabel);
+      form.appendChild(document.createElement("br"));
+
+      for (let j = 0; j <= 3; j++) {
+        const radioInput = document.createElement("input");
+        radioInput.type = "radio";
+        radioInput.name = questionVariable;
+        radioInput.value = j;
+        radioInput.id = `${questionVariable}_${j}`;
+        
+
+        const label = document.createElement("label");
+        label.textContent = ` ${j}`;
+        label.setAttribute("for", `${questionVariable}_${j}`);
+
+        form.appendChild(radioInput);
+        form.appendChild(label);
+      }
+
+      const lineBreak = document.createElement("br");
+      form.appendChild(lineBreak);
+    }
+  let totalSum = 0;
+  let totalAn = 0;
+  let totalSt = 0;
+  let affectdep="";
+  let affectAn="";
+  let affectSt="";
+
+    form.addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    const targetQuestions = [3, 5, 10, 13, 16, 17, 21, 24, 26, 31, 34, 37, 38, 42];
+    const targetAnxiety=[2, 4, 7, 9, 15, 19, 20, 23, 25, 28, 30, 36, 40, 41];
+    const targetStress=[1, 6, 8, 11,12, 14, 18, 22, 27, 29, 32, 33, 35, 39]
+
+// Calculate the total sum of selected options for the specified questions
+for (let i = 0; i < targetQuestions.length; i++) {
+  const questionNumber = targetQuestions[i];
+  const questionVariable = `q${questionNumber}`;
+
+  const selectedOption = document.querySelector(`input[name="${questionVariable}"]:checked`);
+  if (selectedOption) {
+    totalSum += parseInt(selectedOption.value, 10);
+  }
+}
+
+if (totalSum >= 0 && totalSum <= 9) {
+  affectdep="Normal";
+    } else if(totalSum >= 10 && totalSum <= 13) {
+      // Handle other cases as needed
+      affectdep="Mild";
+    }else if(totalSum >= 14 && totalSum <= 20){
+      affectdep="Moderate";
+    }else if(totalSum >= 21 && totalSum <= 27){
+      affectdep="Severe";
+    }else{
+      affectdep="Extremely Severe";
+    }
+
+// Calculate the total sum of selected options for the specified questions
+for (let i = 0; i < targetAnxiety.length; i++) {
+  const questionNumber = targetAnxiety[i];
+  const questionVariable = `q${questionNumber}`;
+
+  const selectedOption = document.querySelector(`input[name="${questionVariable}"]:checked`);
+  if (selectedOption) {
+    totalAn += parseInt(selectedOption.value, 10);
+  }
+}
+
+if (totalSum >= 0 && totalSum <= 7) {
+  affectAn="Normal";
+    } else if(totalSum >= 8 && totalSum <= 9) {
+      // Handle other cases as needed
+      affectAn="Mild";
+    }else if(totalSum >= 10 && totalSum <= 14){
+      affectAn="Moderate";
+    }else if(totalSum >= 15 && totalSum <= 19){
+      affectAn="Severe";
+    }else{
+      affectAn="Extremely Severe";
+    }
+
+// Calculate the total sum of selected options for the specified questions
+
+for (let i = 0; i < targetStress.length; i++) {
+  const questionNumber = targetStress[i];
+  const questionVariable = `q${questionNumber}`;
+
+  const selectedOption = document.querySelector(`input[name="${questionVariable}"]:checked`);
+  if (selectedOption) {
+    totalSt += parseInt(selectedOption.value, 10);
+  }
+}
+
+if (totalSum >= 0 && totalSum <= 14) {
+    affectSt="Normal";
+    } else if(totalSum >= 15 && totalSum <= 18) {
+      // Handle other cases as needed
+      affectSt="Mild";
+    }else if(totalSum >= 19 && totalSum <= 25){
+      affectSt="Moderate";
+    }else if(totalSum >= 26 && totalSum <= 33){
+      affectSt="Severe";
+    }else{
+      affectSt="Extremely Severe";
+    }
+
+    alert(`Depression: ${totalSum}\tEffect: ${affectdep}\n Anxiety: ${totalAn}\tEffect: ${affectAn}\n Stress: ${totalSt}\tEffect: ${affectSt}`);
+    form.reset();
+});
+  </script>
+      <input type="submit" value="Submit">
+    </form>
+    <!--depression-Q3, Q5, 10, 13, 16, 17, 21, 24, 26, 31, 34, 37, 38, 42.
+    anxiety-2, 4, 7, 9, 15, 19, 20, 23, 25, 28, 30, 36, 40, 41
+    stress-1, 6, 8, 11,12, 14, 18, 22, 27, 29, 32, 33, 35, 39.
+  
+ Normal	0-9	0-7	0-14
+Mild	10-13	8-9	15-18
+Moderate	14-20	10-14	19-25
+Severe	21-27	15-19	26-33
+Extremely Severe	28+	20+	34+-->
+    
+</body>
+</html>
